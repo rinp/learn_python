@@ -12,7 +12,8 @@ ENV PYTHONUNBUFFERED=1
 
 COPY pyproject.toml pyproject.toml
 COPY uv.lock uv.lock
-
+# TODO よう確認
+ENV UV_LINK_MODE=copy 
 RUN uv sync --frozen
 WORKDIR /work/app
 

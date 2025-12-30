@@ -2,11 +2,11 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.get("/authers/")
+@router.get("/authors/")
 def get_authers():
     return [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]
 
 
-@router.post("/authers/{id}")
-def get_auther(id: int):
+@router.post("/authors/{id}")
+def get_auther(id: str):
     return {"id": 1, "name": "Alice"}

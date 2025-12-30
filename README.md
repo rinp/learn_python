@@ -11,6 +11,13 @@ docker compose up --build -d
 docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv add fastapi --extra standard
 
 
+### alembic 
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run alembic init alembic
+
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run alembic revision -m"create tables" 
+
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run alembic upgrade head 
+
 # 学び
 ## uv
 pipと比較し高速であるパッケージマネージャー。
@@ -19,4 +26,20 @@ pipと比較し高速であるパッケージマネージャー。
 dockerを経由してローカルには何もインストールせずに利用する想定で作成をすすめるが、
 pythonを普段使いするのであればuvをインストールの上で、version指定もすることで優位性がさらに高いと考えられる。
 
+### TODO
+alembicでのdbコンテナへの指定について
 
+
+
+class Base(DeclarativeBase):
+    # pass
+    __abstract__ = True # このクラスはテーブルとして作成されない
+
+    # TODO 備忘録：各クラス共通項目の書き方、あとで別に記載
+    # created_at: Mapped[datetime] = mapped_column(
+    #     DateTime, default=func.now(), nullable=False
+    # )
+    # updated_at: Mapped[datetime] = mapped_column(
+    #     DateTime, default=func.now(), onupdate=func.now(), nullable=False
+    # )
+ 
