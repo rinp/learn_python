@@ -1,2 +1,2 @@
-from .domain import *
-from .base import *
+from .author import Author
+from .book import Book

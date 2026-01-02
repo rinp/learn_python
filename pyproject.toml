@@ -12,3 +12,24 @@ dependencies = [
     "sqlalchemy>=2.0.45",
     "uvicorn[standard]>=0.40.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+]
+
+[tool.pytest.ini_options]
+# pytest自体のオプション (例: 詳細表示)
+addopts = "-v --cov-report=html"
+# テストファイルがあるディレクトリ
+testpaths = [ "app/tests"]
+[tool.coverage.run]
+source = ["app"]
+branch = true
+[tool.coverage.report]
+# skip_covered = true
+[tool.coverage.html]
+# HTMLレポートの出力ディレクトリ
+directory = "htmlcov"

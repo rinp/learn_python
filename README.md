@@ -2,6 +2,8 @@
 
 docker compose up --build -d
 
+http://localhost:8000/docs
+
 ### uv
 
 #### 初期化

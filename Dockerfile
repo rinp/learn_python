@@ -15,7 +15,7 @@ COPY uv.lock uv.lock
 # TODO よう確認
 ENV UV_LINK_MODE=copy 
 RUN uv sync --frozen
-WORKDIR /work/app
+WORKDIR /work
 
 # --host 0.0.0.0だとIPv6でアクセスできないので、--host ::に変更
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "::", "--port", "8000", "--reload", "--log-level", "debug", "--access-log"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "::", "--port", "8000", "--reload", "--log-level", "debug", "--access-log"]

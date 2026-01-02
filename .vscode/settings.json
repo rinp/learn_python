@@ -3,5 +3,8 @@
       "editor.defaultFormatter": "ms-python.autopep8"
     },
     "editor.defaultFormatter": "ms-python.autopep8",
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "files.exclude": {
+        "**/__pycache__": true,
+    }
 }
