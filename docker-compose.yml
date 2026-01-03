@@ -6,7 +6,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+      PROFILE: dev
+#      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
     depends_on:
       - db
 
@@ -31,3 +32,6 @@ services:
  
 volumes:
   postgres_data:
+  uv_tools_venv:
+  uv_tools_cache:
+

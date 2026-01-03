@@ -1,0 +1,16 @@
+name: ${COMPOSE_PROJECT_NAME:-learn_python_tools}
+services:
+  tools:
+    build: .
+    volumes:
+      - ./app:/work/app
+      - uv_tools_venv:/work/.venv
+      - uv_tools_cache:/root/.cache/uv
+    environment:
+      UV_LINK_MODE: copy
+    tty: true
+    stdin_open: true
+
+volumes:
+  uv_tools_venv:
+  uv_tools_cache:

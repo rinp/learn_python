@@ -1,24 +1,22 @@
-from typing import List
 from uuid import UUID
 
-from dataclasses import dataclass
+from pydantic import BaseModel, Field
+
+class AuthorResponse(BaseModel):
+    id: UUID = Field(..., description="著者の一意な識別子")
+    name: str = Field(..., description="著者名")
 
 
-@dataclass(frozen=True, slots=True)
-class AuthorResponse:
+class BookResponse(BaseModel):
+    class Author(BaseModel):
+        id: UUID = Field(..., description="著者の一意な識別子")
+        name: str = Field(..., description="著者名")
 
-    id: UUID
-    name: str
+    id: UUID = Field(..., description="著書の一意な識別子")
+    title: str = Field(..., description="書籍のタイトル")
+    author: Author = Field(..., description="書籍の著者情報")
 
 
-@dataclass(frozen=True, slots=True)
-class BookResponse:
-
-    @dataclass(frozen=True, slots=True)
-    class Author:
-        id: UUID
-        name: str
-
-    id: UUID
-    title: str
-    author: Author
+class NotFoundBookResponse(BaseModel):
+    message: str = Field(..., description="メッセージ")
+    book_id: UUID = Field(..., description="書籍の一意な識別子")

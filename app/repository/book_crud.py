@@ -1,27 +1,38 @@
-from typing import Optional
-
-from sqlalchemy import insert, delete
-from sqlalchemy.orm import Session
-
-from app.models import Book, Author
-from app.schemas.param import BookCreateParam
-from uuid import UUID
 import logging
+from uuid import UUID
 
-def select_all_with_author(session:Session)-> list[Book]:
-    return session.query(Book).join(Author).all()
-    
-def find_by_id(session: Session, id: UUID) -> Optional[Book]:
-    return session.query(Book).filter(Book.id == id).first()
+from sqlalchemy import delete, select
+from sqlalchemy import insert as sa_insert
+from sqlalchemy.orm import Session, contains_eager
 
-def create(session:Session, book_create_param: BookCreateParam) -> Book:
-    stmt = insert(Book).values(
-        title=book_create_param.title,
-        author_id=book_create_param.author_id).returning(Book)
-    Book = session.execute(stmt).scalars().one()
-    return Book
+from app.models import Book
+from app.schemas.param import BookCreateParam
 
-def delete_by_id(session: Session, book_id: UUID) -> None:
-    stmt = delete(Book).filter(Book.id == book_id)
-    ret = session.execute(stmt)
-    logging.info(f"deleted rows count: {ret!r}")
+
+def select_all_with_author(session: Session) -> list[Book]:
+    stmt = select(Book).join(Book.author).options(contains_eager(Book.author))
+    ret = session.execute(stmt).unique().scalars().all()
+    return list(ret)
+
+
+def select_by_id(session: Session, id: UUID) -> Book | None:
+    stmt = select(Book).filter(Book.id == id)
+    return session.execute(stmt).scalar_one_or_none()
+
+
+def insert(session: Session, book_create_param: BookCreateParam) -> Book:
+    stmt = (
+        sa_insert(Book)
+        .values(title=book_create_param.title, author_id=book_create_param.author_id)
+        .returning(Book)
+    )
+    book = session.execute(stmt).scalar_one()
+    return book
+
+
+def delete_by_id(session: Session, book_id: UUID) -> bool:
+    stmt = delete(Book).filter(Book.id == book_id).returning(Book.id)
+    result = session.execute(stmt)
+    deleted_count = result.scalar_one_or_none()
+    logging.info(f"Deleted count: {deleted_count}")
+    return deleted_count is not None

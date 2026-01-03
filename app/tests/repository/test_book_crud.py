@@ -3,14 +3,14 @@
 
 # from sqlalchemy.orm import Session
 
-# from app.repository.author_crud import create
+# from app.repository.book_crud import create
 
 
-# def test_create_author(mocker):
+# def select_all_with_author(mocker):
 #     input = "Test Author"
 #     mock_session = mocker.MagicMock(spec=Session)
 #     mock_author = SimpleNamespace(id=uuid1(), name=input)
-#     mock_session.execute.return_value.one.return_value = mock_author
+#     mock_session.execute.return_value.scalar_one.return_value = mock_author
 
 #     author = create(mock_session, input)
 

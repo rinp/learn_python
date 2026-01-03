@@ -1,17 +1,20 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from typing import Generator
-from sqlalchemy.orm import Session
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@db:5432/postgres"
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
+
+from app.config import settings
+
+SQLALCHEMY_DATABASE_URL = settings.database_url
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    pool_recycle=3600, 
+    pool_recycle=3600,
     pool_pre_ping=True,
     echo=True,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
 
 def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
@@ -23,6 +26,7 @@ def get_db() -> Generator[Session, None, None]:
         raise
     finally:
         db.close()
+
 
 # from sqlalchemy import text
 

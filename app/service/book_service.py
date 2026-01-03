@@ -1,25 +1,67 @@
-from app.schemas.response import BookResponse
+from typing import Callable
+from uuid import UUID
+
 from sqlalchemy.orm import Session
+
+from app.exceptions import BookNotFoundError
+from app.models import Book
+from app.repository.book_crud import (
+    delete_by_id,
+    insert,
+    select_all_with_author,
+    select_by_id,
+)
 from app.schemas.param import BookCreateParam
-from app.repository.book_crud import create, find_by_id, delete_by_id, select_all_with_author
-import logging
+from app.schemas.response import BookResponse
 
-def create_book(session: Session, book_create_param: BookCreateParam) -> BookResponse:
-    # 書き込み系だけ transaction block を張って自動commit/rollback
+
+def _to_response(book: Book) -> BookResponse:
+    author = book.author
+
+    return BookResponse(
+        id=book.id,
+        title=book.title,
+        author=BookResponse.Author(id=author.id, name=author.name),
+    )
+
+
+def create_book(
+    session: Session,
+    book_create_param: BookCreateParam,
+    create_fn: Callable[[Session, BookCreateParam], Book] = insert,
+) -> BookResponse:
     with session.begin():
-        book = create(session, book_create_param)
-        logging.info(f"created book: {book!r}")
-        ret = BookResponse.model_validate(book)
+        book = create_fn(session, book_create_param)
+        ret = _to_response(book)
     return ret
 
-def find(session: Session, id: str) -> BookResponse:
-    book = find_by_id(session, id)
-    ret = BookResponse.model_validate(book)
+
+def find_one_book(
+    session: Session,
+    book_id: UUID,
+    find_fn: Callable[[Session, UUID], Book | None] = select_by_id,
+) -> BookResponse:
+    book = find_fn(session, book_id)
+    if book is None:
+        raise BookNotFoundError(book_id)
+    ret = _to_response(book)
     return ret
 
-def find_all(session: Session) -> list[BookResponse]:
-    return select_all_with_author(session)
 
-def delete_book(session: Session, book_id: str) -> None:
+def find_all_books(
+    session: Session,
+    find_all_fn: Callable[[Session], list[Book]] = select_all_with_author,
+) -> list[BookResponse]:
+    books = find_all_fn(session)
+    return [_to_response(book) for book in books]
+
+
+def delete_book(
+    session: Session,
+    book_id: UUID,
+    delete_by_id_fn: Callable[[Session, UUID], bool] = delete_by_id,
+) -> None:
     with session.begin():
-        delete_by_id(session, book_id)
+        is_deleted = delete_by_id_fn(session, book_id)
+        if not is_deleted:
+            raise BookNotFoundError(book_id)

@@ -4,21 +4,29 @@ docker compose up --build -d
 
 http://localhost:8000/docs
 
+## Ruff / Mypy（ローカルにPython不要）
+
+Docker上でRuff/Mypyを実行します（仮想環境はnamed volumeに作成されます）。
+
+- フォーマット + Lint + 型チェック: `./scripts/check.sh`
+
 ### uv
 
 #### 初期化
 ```docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv init```
+
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv venv 
 
 #### パッケージ追加
 docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv add fastapi --extra standard
 
 
 ### alembic 
-docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run alembic init alembic
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run --link-mode=copy alembic init alembic
 
-docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run alembic revision -m"create tables" 
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run --link-mode=copy alembic revision -m"create tables" 
 
-docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run alembic upgrade head 
+docker run --rm -it -v"$PWD":/app -w /app astral/uv:0.9.18-python3.14-trixie-slim uv run --link-mode=copy alembic upgrade head 
 
 # 学び
 ## uv
