@@ -1,16 +1,5 @@
 # 開発向け(localとdev)は同様に利用する想定
 services:
-  web:
-    build: .
-    volumes:
-      - ./app:/work/app
-    ports:
-      - "8000:8000"
-    environment:
-      PROFILE: dev
-    depends_on:
-      - db
-
   db:
     image: postgres:15
     restart: always
@@ -32,6 +21,4 @@ services:
  
 volumes:
   postgres_data:
-  uv_tools_venv:
-  uv_tools_cache:
 

@@ -1,5 +1,5 @@
+"""書籍ルーターのテストモジュール"""
 import pytest
-from typing import Callable, ParamSpec, TypeVar
 from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
@@ -15,23 +15,29 @@ from app.routers.book_router import (
     get_delete_book_service,
 )
 
+from app.schemas.param import BookCreateParam
 from app.schemas.response import BookResponse
-from app.exceptions import NotFoundBookEexception, NotFoundAuthorEexception
+from app.exceptions import NotFoundBookException, NotFoundAuthorException
+from typing import Callable, ParamSpec, TypeVar
 
 P = ParamSpec("P")
 R = TypeVar("R")
 
-def get_dummy(dummy_service: Callable[P, R]) -> Callable[[], Callable[P, R]]:
+def provider(service: Callable[P, R]) -> Callable[[], Callable[P, R]]:
+    """サービス関数をrouterで利用する際に利用するプロバイダ関数
+
+    今システムではService層の関数自体をFastAPIのDependsで提供する
+    """
     def provider() -> Callable[P, R]:
-        return dummy_service
+        return service
 
     return provider
-
 
 client = TestClient(app)
 
 @pytest.fixture(scope="function")
 def override_dependency(mocker):
+    """DBセッションのモック化"""
     mock_session: Session = mocker.MagicMock()
 
     def dummy_get_db():
@@ -55,7 +61,7 @@ def dummy_get_find_books_service(
     ]
 
 def test_find_books_success(override_dependency):
-    app.dependency_overrides[get_find_books_service] = get_dummy(dummy_get_find_books_service)
+    app.dependency_overrides[get_find_books_service] = provider(dummy_get_find_books_service)
 
     response = client.get("/books")
     data = response.json()
@@ -72,10 +78,10 @@ def dummy_get_find_book_service(
 def dummy_get_find_book_service_fail(
     session: Session, book_id: UUID
 ):
-    raise NotFoundBookEexception(book_id=book_id)
+    raise NotFoundBookException(book_id=book_id)
 
 def test_find_book_success(override_dependency):
-    app.dependency_overrides[get_find_book_service] = get_dummy(dummy_get_find_book_service)
+    app.dependency_overrides[get_find_book_service] = provider(dummy_get_find_book_service)
 
     response = client.get(f"/books/{uuid4()}")
     data = response.json()
@@ -83,7 +89,7 @@ def test_find_book_success(override_dependency):
 
 
 def test_find_book_fail_unmatch(override_dependency):
-    app.dependency_overrides[get_find_book_service] = get_dummy(dummy_get_find_book_service)
+    app.dependency_overrides[get_find_book_service] = provider(dummy_get_find_book_service)
 
     response = client.get(f"/books/invalid-uuid")
     data = response.json()
@@ -91,7 +97,7 @@ def test_find_book_fail_unmatch(override_dependency):
 
 
 def test_find_book_fail_not_found(override_dependency):
-    app.dependency_overrides[get_find_book_service] = get_dummy(dummy_get_find_book_service_fail)
+    app.dependency_overrides[get_find_book_service] = provider(dummy_get_find_book_service_fail)
 
     response = client.get(f"/books/invalid-uuid")
     data = response.json()
@@ -109,7 +115,7 @@ def dummy_get_create_book_service(
                         author=BookResponse.Author(id=param.author_id, name="name"))
 
 def test_create_book_success(override_dependency):
-    app.dependency_overrides[get_create_book_service] = get_dummy(dummy_get_create_book_service)
+    app.dependency_overrides[get_create_book_service] = provider(dummy_get_create_book_service)
 
     response = client.post(
         "/books",
@@ -122,7 +128,7 @@ def test_create_book_success(override_dependency):
     assert response.status_code == 201
 
 def test_create_book_fail_title_required(override_dependency):
-    app.dependency_overrides[get_create_book_service] = get_dummy(dummy_get_create_book_service)
+    app.dependency_overrides[get_create_book_service] = provider(dummy_get_create_book_service)
 
     response = client.post(
         "/books",
@@ -134,7 +140,7 @@ def test_create_book_fail_title_required(override_dependency):
     assert response.status_code == 422
 
 def test_create_book_fail_title_required(override_dependency):
-    app.dependency_overrides[get_create_book_service] = get_dummy(dummy_get_create_book_service)
+    app.dependency_overrides[get_create_book_service] = provider(dummy_get_create_book_service)
 
     response = client.post(
         "/books",
@@ -146,7 +152,7 @@ def test_create_book_fail_title_required(override_dependency):
     assert response.status_code == 422
 
 def test_create_book_fail_over_length(override_dependency):
-    app.dependency_overrides[get_create_book_service] = get_dummy(dummy_get_create_book_service)
+    app.dependency_overrides[get_create_book_service] = provider(dummy_get_create_book_service)
 
     response = client.post(
         "/books",
@@ -159,7 +165,7 @@ def test_create_book_fail_over_length(override_dependency):
     assert response.status_code == 422
 
 def test_create_book_fail_unmatch(override_dependency):
-    app.dependency_overrides[get_create_book_service] = get_dummy(dummy_get_create_book_service)
+    app.dependency_overrides[get_create_book_service] = provider(dummy_get_create_book_service)
 
     response = client.post(
         "/books",
@@ -174,10 +180,10 @@ def test_create_book_fail_unmatch(override_dependency):
 def dummy_get_create_book_service_fail(
     session: Session, param: BookCreateParam
 ):
-    raise NotFoundAuthorEexception(author_id=param.author_id)
+    raise NotFoundAuthorException(author_id=param.author_id)
 
 def test_create_book_fail_not_found_user(override_dependency):
-    app.dependency_overrides[get_create_book_service] = get_dummy(dummy_get_create_book_service_fail)
+    app.dependency_overrides[get_create_book_service] = provider(dummy_get_create_book_service_fail)
 
     response = client.post(
         "/books",
@@ -201,17 +207,17 @@ def dummy_get_delete_book_service(
 def dummy_get_delete_book_service_fail(
     session: Session, book_id: UUID
 ):
-    raise NotFoundBookEexception(book_id=book_id)
+    raise NotFoundBookException(book_id=book_id)
 
 
 def test_delete_book_success(override_dependency):
-    app.dependency_overrides[get_delete_book_service] = get_dummy(dummy_get_delete_book_service)
+    app.dependency_overrides[get_delete_book_service] = provider(dummy_get_delete_book_service)
 
     response = client.delete(f"/books/{uuid4()}")
     assert response.status_code == 204
 
 def test_delete_book_fail(override_dependency):
-    app.dependency_overrides[get_delete_book_service] = get_dummy(dummy_get_delete_book_service_fail)
+    app.dependency_overrides[get_delete_book_service] = provider(dummy_get_delete_book_service_fail)
 
     response = client.delete(f"/books/{uuid4()}")
     assert response.status_code == 404

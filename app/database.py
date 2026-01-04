@@ -1,3 +1,5 @@
+"""データベース接続とセッション管理を提供するモジュール"""
+
 from typing import Generator
 
 from sqlalchemy import create_engine
@@ -11,12 +13,17 @@ engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     pool_recycle=3600,
     pool_pre_ping=True,
-    echo=True,
+    echo=settings.is_dev(),
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
 def get_db() -> Generator[Session, None, None]:
+    """データベースセッションを生成するジェネレータ
+
+    Depends で使用され、リクエストごとにセッションを提供する。
+
+    """
     db = SessionLocal()
     try:
         yield db
@@ -26,10 +33,3 @@ def get_db() -> Generator[Session, None, None]:
         raise
     finally:
         db.close()
-
-
-# from sqlalchemy import text
-
-# with engine.connect() as conn:
-#     result = conn.execute(text("select 'hello world'"))
-#     print(result.all())

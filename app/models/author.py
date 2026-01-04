@@ -14,6 +14,13 @@ if TYPE_CHECKING:
 
 
 class Author(Base):
+    """著者を表す ORM モデル
+
+    Attributes:
+        id (UUID): 著者の一意な識別子
+        name (str): 著者名
+    """
+
     __tablename__ = "Authors"
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid1)

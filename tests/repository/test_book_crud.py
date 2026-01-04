@@ -1,3 +1,4 @@
+""""書籍のCRUDテストモジュール"""
 import pytest
 
 from app.models.base import Base
@@ -6,10 +7,14 @@ from app.repository.book_crud import insert, select_all, select_by_id, delete_by
 from app.database import engine
 from app.schemas.param import BookCreateParam
 from uuid import uuid4
-from app.exceptions import NotFoundAuthorEexception
+from app.exceptions import NotFoundAuthorException
 from app.database import get_db
+
 @pytest.fixture(scope="function")
 def setup_clear_db(setup_database):
+    """DBの初期化
+    setup_database でのテーブル生成後のfixture
+    """
     db_gen = get_db()
     session = next(db_gen)
 
@@ -46,7 +51,7 @@ def test_insert_fail(setup_clear_db):
         if len(authors) == 0:
             break
 
-    with pytest.raises(NotFoundAuthorEexception):
+    with pytest.raises(NotFoundAuthorException):
         insert(session, BookCreateParam(title="Integration Test Book", author_id=uuid))
         
 

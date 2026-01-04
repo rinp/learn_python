@@ -1,3 +1,4 @@
+""""著者のCRUDテストモジュール"""
 import pytest
 
 from sqlalchemy import delete
@@ -10,6 +11,9 @@ from app.database import engine
 
 @pytest.fixture(scope="function")
 def setup_clear_db(setup_database):
+    """DBの初期化
+    setup_database でのテーブル生成後のfixture
+    """
     db_gen = get_db()
     session = next(db_gen)
 
@@ -20,10 +24,6 @@ def setup_clear_db(setup_database):
         yield session
     finally:
         session.rollback()
-        # try:
-        #     next(db_gen)
-        # except StopIteration:
-        #     pass
 
 def test_insert_success(setup_clear_db):
     session = setup_clear_db

@@ -1,3 +1,5 @@
+"""著者関連の API ルーター定義モジュール"""
+
 from typing import Callable
 
 from fastapi import APIRouter, Depends, status
@@ -24,4 +26,15 @@ def create_author(
         get_create_author_service
     ),
 ) -> AuthorResponse:
+    """著者登録 API エンドポイント
+
+    Args:
+        author_create_param: 登録する著者の入力 DTO
+        session: FastAPI が管理する SQLAlchemy セッション
+        service: 実処理となる関数
+
+    Returns:
+        登録された著者のレスポンス DTO
+    """
+
     return service(session, author_create_param)

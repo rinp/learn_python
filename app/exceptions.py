@@ -1,11 +1,17 @@
-from __future__ import annotations
+"""独自例外を定義するモジュール"""
 
 from dataclasses import dataclass
 from uuid import UUID
 
 
 @dataclass(slots=True)
-class NotFoundBookEexception(Exception):
+class NotFoundBookException(Exception):
+    """書籍の取得失敗向け例外
+
+    Attributes:
+        book_id (UUID): 見つからなかった書籍の ID
+    """
+
     book_id: UUID
 
     def __str__(self) -> str:
@@ -13,7 +19,13 @@ class NotFoundBookEexception(Exception):
 
 
 @dataclass(slots=True)
-class NotFoundAuthorEexception(Exception):
+class NotFoundAuthorException(Exception):
+    """著者の取得失敗向け例外
+
+    Attributes:
+        author_id (UUID): 見つからなかった著者の ID
+    """
+
     author_id: UUID
 
     def __str__(self) -> str:

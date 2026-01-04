@@ -4,6 +4,10 @@ services:
     build: .
     volumes:
       - ./app:/work/app
+      - ./alembic:/work/alembic
+      - ./alembic.ini:/work/alembic.ini
+      - ./pyproject.toml:/work/pyproject.toml
+      - ./uv.lock:/work/uv.lock
       - uv_tools_venv:/work/.venv
       - uv_tools_cache:/root/.cache/uv
     environment:

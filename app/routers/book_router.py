@@ -1,3 +1,5 @@
+"""書籍関連の API ルーター定義モジュール"""
+
 from typing import Callable
 from uuid import UUID
 
@@ -12,10 +14,6 @@ from app.schemas.response import (
     NotFoundAuthorResponse,
     NotFoundBookResponse,
 )
-
-"""
-書籍に関するAPIエンドポイント定義モジュール
-"""
 
 router: APIRouter = APIRouter()
 
@@ -45,6 +43,15 @@ def find_books(
     session: Session = Depends(get_db),
     service: Callable[[Session], list[BookResponse]] = Depends(get_find_books_service),
 ) -> list[BookResponse]:
+    """全件の書籍検索 API エンドポイント
+
+    Args:
+        session: FastAPI が管理する SQLAlchemy セッション
+        service: 実処理となる関数
+
+    Returns:
+        すべての書籍のレスポンス DTO
+    """
     return service(session)
 
 
@@ -66,6 +73,16 @@ def find_book(
     session: Session = Depends(get_db),
     service: Callable[[Session, UUID], BookResponse] = Depends(get_find_book_service),
 ) -> BookResponse:
+    """idが一致する書籍検索 API エンドポイント
+
+    Args:
+        book_id: 取得対象とする書籍の一意な識別子
+        session: FastAPI が管理する SQLAlchemy セッション
+        service: 実処理となる関数
+
+    Returns:
+        条件に一致する書籍のレスポンス DTO
+    """
     return service(session, book_id)
 
 
@@ -90,6 +107,16 @@ def create_book(
         get_create_book_service
     ),
 ) -> BookResponse:
+    """書籍登録 API エンドポイント
+
+    Args:
+        book_create_param: 登録する書籍の入力 DTO
+        session: FastAPI が管理する SQLAlchemy セッション
+        service: 実処理となる関数
+
+    Returns:
+        登録された書籍のレスポンス DTO
+    """
     return service(session, book_create_param)
 
 
@@ -112,6 +139,14 @@ def delete_book(
     session: Session = Depends(get_db),
     service: Callable[[Session, UUID], None] = Depends(get_delete_book_service),
 ) -> None:
+    """書籍削除 API エンドポイント
+
+    Args:
+        book_id: 削除対象とする書籍の一意な識別子
+        session: FastAPI が管理する SQLAlchemy セッション
+        service: 実処理となる関数
+    """
+
     return service(session, book_id)
 
 

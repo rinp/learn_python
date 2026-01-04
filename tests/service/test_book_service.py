@@ -1,6 +1,8 @@
+"""書籍サービスのテストモジュール"""
+
 import pytest
 
-from app.exceptions import NotFoundBookEexception
+from app.exceptions import NotFoundBookException
 from app.schemas.param import BookCreateParam
 from app.schemas.response import BookResponse
 from app.service.book_service import (
@@ -94,7 +96,7 @@ def test_find_fail(mocker):
     mock_find_fn = mocker.MagicMock()
     mock_find_fn.return_value = None
 
-    with pytest.raises(NotFoundBookEexception):
+    with pytest.raises(NotFoundBookException):
         find_one_book(session=mock_session, book_id=book_id, find_fn=mock_find_fn)
 
     mock_find_fn.assert_called_once_with(mock_session, book_id)
@@ -163,7 +165,7 @@ def test_delete_book_fail(mocker):
     mock_delete_by_id_fn = mocker.MagicMock()
     mock_delete_by_id_fn.return_value = 0
 
-    with pytest.raises(NotFoundBookEexception):
+    with pytest.raises(NotFoundBookException):
         delete_book(
             session=mock_session, book_id=book_id, delete_by_id_fn=mock_delete_by_id_fn
         )

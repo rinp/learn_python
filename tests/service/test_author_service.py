@@ -1,3 +1,5 @@
+"""著者サービスのテストモジュール"""
+
 from types import SimpleNamespace
 from uuid import uuid1
 
