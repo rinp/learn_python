@@ -1,7 +1,7 @@
 [project]
 name = "app"
 version = "0.1.0"
-description = "Add your description here"
+description = "開発課題"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
