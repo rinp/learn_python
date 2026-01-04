@@ -1,16 +1,19 @@
 import logging
 from uuid import UUID
 
+from psycopg2.errors import ForeignKeyViolation
 from sqlalchemy import delete, select
 from sqlalchemy import insert as sa_insert
-from sqlalchemy.orm import Session, contains_eager
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
+from app.exceptions import NotFoundAuthorEexception
 from app.models import Book
 from app.schemas.param import BookCreateParam
 
 
-def select_all_with_author(session: Session) -> list[Book]:
-    stmt = select(Book).join(Book.author).options(contains_eager(Book.author))
+def select_all(session: Session) -> list[Book]:
+    stmt = select(Book)
     ret = session.execute(stmt).unique().scalars().all()
     return list(ret)
 
@@ -26,7 +29,17 @@ def insert(session: Session, book_create_param: BookCreateParam) -> Book:
         .values(title=book_create_param.title, author_id=book_create_param.author_id)
         .returning(Book)
     )
-    book = session.execute(stmt).scalar_one()
+    try:
+        logging.info("#########################################################")
+        logging.info("#########################################################")
+        logging.info("#########################################################")
+        logging.info("#########################################################")
+        logging.info("#########################################################")
+        logging.info("#########################################################")
+        book = session.execute(stmt).scalar_one()
+    except IntegrityError as e:
+        if isinstance(e.orig, ForeignKeyViolation):
+            raise NotFoundAuthorEexception(author_id=book_create_param.author_id)
     return book
 
 

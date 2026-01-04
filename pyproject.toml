@@ -50,10 +50,10 @@ exclude = [
 
 [tool.pytest.ini_options]
 # pytest自体のオプション (例: 詳細表示)
-# addopts = "-v --cov-report=html"
-addopts = "-v"
+addopts = "-v --cov --cov-report=term-missing --cov-report=html"
+#addopts = "-v"
 # テストファイルがあるディレクトリ
-testpaths = [ "app/tests"]
+testpaths = [ "tests"]
 [tool.coverage.run]
 source = ["app"]
 branch = true

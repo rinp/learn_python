@@ -15,7 +15,7 @@ class AuthorCreateParam(BaseModel):
         ...,
         max_length=AUTHOR_NAME_MAX_LENGTH,
         description=f"著者名。最大 {AUTHOR_NAME_MAX_LENGTH} 文字。",
-        examples=["氏名"],
+        example="著者の氏名",
     )
 
 
@@ -24,10 +24,10 @@ class BookCreateParam(BaseModel):
         ...,
         max_length=BOOK_TITLE_MAX_LENGTH,
         description=f"書籍名。最大 {BOOK_TITLE_MAX_LENGTH} 文字。",
-        examples=["本のタイトル"],
+        example="著書の名前",
     )
     author_id: uuid.UUID = Field(
         ...,
         description="著者ID。既存の著者IDを指定する必要があります。",
-        examples=["123e4567-e89b-12d3-a456-426614174000"],
+        example="xxxxxxxx-xxxx-xxxx-Nxxx-xxxxxxxxxxxx",
     )

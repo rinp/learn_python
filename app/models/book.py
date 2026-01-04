@@ -18,5 +18,5 @@ class Book(Base):
     author_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("Authors.id"), index=True)
 
     author: Mapped[Author] = relationship(
-        "Author", back_populates="books", lazy="noload"
+        "Author", back_populates="books", lazy="joined"
     )

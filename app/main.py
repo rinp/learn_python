@@ -5,9 +5,9 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.exceptions import BookNotFoundError
-from app.routers import author, book
-from app.schemas.response import NotFoundBookResponse
+from app.exceptions import NotFoundAuthorEexception, NotFoundBookEexception
+from app.routers import author_router, book_router
+from app.schemas.response import NotFoundAuthorResponse, NotFoundBookResponse
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -18,34 +18,37 @@ logging.basicConfig(
 #########################
 logging.info("アプリが起動します")
 app = FastAPI()
-app.include_router(author.router, tags=["authors"])
-app.include_router(book.router, tags=["books"])
+app.include_router(author_router.router, tags=["authors"])
+app.include_router(book_router.router, tags=["books"])
 
 logging.info(settings.database_url)
 
 
-@app.exception_handler(BookNotFoundError)
-async def book_not_found_handler(request: Request, exc: BookNotFoundError) -> Response:
+@app.exception_handler(NotFoundBookEexception)
+async def book_not_found_handler(
+    request: Request, exc: NotFoundBookEexception
+) -> Response:
     response = NotFoundBookResponse(
         message=str(exc),
         book_id=exc.book_id,
     )
-    logging.info("####################################")
-    logging.info("####################################")
-    logging.info("####################################")
-    logging.info("####################################")
-    logging.info("####################################")
-    logging.info(f"encoder: {jsonable_encoder(response)}")
-    logging.info(f"dump: {response.json()}")
-    # logging.info(f"dump: {json.dumps(response.dict())}")
-    logging.info("####################################")
-    logging.info("####################################")
-    logging.info("####################################")
-    logging.info("####################################")
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
         content=jsonable_encoder(response),
-        # content= response.json()
+    )
+
+
+@app.exception_handler(NotFoundAuthorEexception)
+async def author_not_found_handler(
+    request: Request, exc: NotFoundAuthorEexception
+) -> Response:
+    response = NotFoundAuthorResponse(
+        message=str(exc),
+        author_id=exc.author_id,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content=jsonable_encoder(response),
     )
 
 

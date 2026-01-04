@@ -12,6 +12,7 @@ from .constants import AUTHOR_NAME_MAX_LENGTH
 if TYPE_CHECKING:
     from .book import Book
 
+
 class Author(Base):
     __tablename__ = "Authors"
 
@@ -19,5 +20,5 @@ class Author(Base):
     name: Mapped[str] = mapped_column(String(AUTHOR_NAME_MAX_LENGTH), nullable=False)
 
     books: Mapped[List["Book"]] = relationship(
-        "Book", back_populates="author", lazy="noload"
+        "Book", back_populates="author", lazy="raise"
     )

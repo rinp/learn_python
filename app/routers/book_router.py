@@ -7,7 +7,11 @@ from sqlalchemy.orm import Session
 import app.service.book_service as service
 from app.database import get_db
 from app.schemas.param import BookCreateParam
-from app.schemas.response import BookResponse, NotFoundBookResponse
+from app.schemas.response import (
+    BookResponse,
+    NotFoundAuthorResponse,
+    NotFoundBookResponse,
+)
 
 """
 書籍に関するAPIエンドポイント定義モジュール
@@ -16,20 +20,20 @@ from app.schemas.response import BookResponse, NotFoundBookResponse
 router: APIRouter = APIRouter()
 
 
-def get_delete_service():
+def get_delete_book_service():
     return service.delete_book
 
 
-def get_create_service():
+def get_create_book_service():
     return service.create_book
 
 
 def get_find_book_service():
-    return service.find_by_id
+    return service.find_one_book
 
 
 def get_find_books_service():
-    return service.find_all
+    return service.find_all_books
 
 
 #################################################################################
@@ -69,12 +73,21 @@ def find_book(
 #################################################################################
 
 
-@router.post("/books", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/books",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Author not found",
+            "model": NotFoundAuthorResponse,
+        }
+    },
+)
 def create_book(
     book_create_param: BookCreateParam,
     session: Session = Depends(get_db),
     service: Callable[[Session, BookCreateParam], BookResponse] = Depends(
-        get_create_service
+        get_create_book_service
     ),
 ) -> BookResponse:
     return service(session, book_create_param)
@@ -97,7 +110,7 @@ def create_book(
 def delete_book(
     book_id: UUID = Path(..., description="削除対象とする書籍の一意な識別子"),
     session: Session = Depends(get_db),
-    service: Callable[[Session, UUID], None] = Depends(get_delete_service),
+    service: Callable[[Session, UUID], None] = Depends(get_delete_book_service),
 ) -> None:
     return service(session, book_id)
 

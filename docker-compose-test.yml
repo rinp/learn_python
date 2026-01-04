@@ -1,9 +1,10 @@
 name: ${COMPOSE_PROJECT_NAME:-learn_python_test}
 services:
-  web:
+  test_web:
     build: .
     volumes:
       - ./app:/work/app
+      - ./tests:/work/tests
       - uv_tools_venv:/work/.venv
       - uv_tools_cache:/root/.cache/uv
       - ./htmlcov:/work/htmlcov
@@ -11,11 +12,11 @@ services:
       - "8001:8000"
     environment:
       PROFILE: test
-#      DATABASE_URL: postgresql://postgres:postgres@db:5433/postgres
+#      DATABASE_URL: postgresql://postgres:postgres@test_db:5433/postgres
     depends_on:
-      - db
+      - test_db
 
-  db:
+  test_db:
     image: postgres:15
     restart: always
     environment:
