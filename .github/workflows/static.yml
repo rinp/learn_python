@@ -18,17 +18,19 @@ jobs:
     # Specify runner +  build & upload the static files as an artifact
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Build static files
         id: build
         run: |
           docker run --rm -v "${{ github.workspace }}":/app -w /app \
-            redocly/cli build-docs ./page/openApi/openapi.json -o ./_site/index.html
+            ghcr.io/redocly/cli build-docs ./page/openApi/openapi.json -o ./_site/index.html
 
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: build_outputs_folder/
+          path: ./_site/
 
   # Deployment job
   deploy:
