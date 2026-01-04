@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
       paths:
-        'page/openApi/openapi.json'
+        - 'page/openApi/openapi.json'
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
