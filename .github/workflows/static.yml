@@ -2,7 +2,7 @@ name: Github Actions :Deploy static content to Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "doc"]
     paths:
       - 'page/openApi/openapi.json'
   workflow_dispatch:
