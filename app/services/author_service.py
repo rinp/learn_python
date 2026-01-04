@@ -5,7 +5,7 @@ from typing import Callable
 from sqlalchemy.orm import Session
 
 from app.models import Author
-from app.repository.author_crud import insert
+from app.crud.author_crud import insert
 from app.schemas.param import AuthorCreateParam
 from app.schemas.response import AuthorResponse
 

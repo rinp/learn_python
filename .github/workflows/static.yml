@@ -26,7 +26,7 @@ jobs:
         id: build
         run: |
           docker run --rm -v "${{ github.workspace }}":/app -w /app \
-            ghcr.io/redocly/cli build-docs ./page/openApi/openapi.json -o ./_site/index.html
+            ghcr.io/redocly/cli build-docs ./page/openApi/openapi.json -o ./_site/api.html
 
       - name: Upload static files as artifact
         id: deployment

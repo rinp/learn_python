@@ -6,7 +6,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Path, status
 from sqlalchemy.orm import Session
 
-import app.service.book_service as service
+import app.services.book_service as service
 from app.database import get_db
 from app.schemas.param import BookCreateParam
 from app.schemas.response import (

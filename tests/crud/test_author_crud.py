@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Author
-from app.repository.author_crud import insert
+from app.crud.author_crud import insert
 from app.database import engine
 
 @pytest.fixture(scope="function")

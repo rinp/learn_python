@@ -5,7 +5,7 @@ import pytest
 from app.exceptions import NotFoundBookException
 from app.schemas.param import BookCreateParam
 from app.schemas.response import BookResponse
-from app.service.book_service import (
+from app.services.book_service import (
     create_book,
     delete_book,
     find_all_books,

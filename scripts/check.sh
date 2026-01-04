@@ -21,8 +21,6 @@ ${compose[@]} up -d --no-deps tools >/dev/null
 echo "Formatting code with ruff..."
 ${compose[@]} exec -T tools uv run ruff format .
 echo "Checking code with ruff..."
-${compose[@]} exec -T tools uv run ruff check --select I --fix .
-echo "Type checking with mypy..."
 ${compose[@]} exec -T tools uv run ruff check .  --fix
 echo " Running mypy..."
 ${compose[@]} exec -T tools uv run mypy app

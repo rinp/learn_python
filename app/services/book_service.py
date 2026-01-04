@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.exceptions import NotFoundBookException
 from app.models import Author, Book
-from app.repository.book_crud import (
+from app.crud.book_crud import (
     delete_by_id,
     insert,
     select_all,

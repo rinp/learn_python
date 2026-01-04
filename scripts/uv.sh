@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 : "${COMPOSE_PROJECT_NAME:=learn_python_tools}"
 export COMPOSE_PROJECT_NAME
 
-uv_args=($@)
+uv_args=("$@")
 if [ ${#uv_args[@]} -eq 0 ]; then
   echo "usage: $0 <uv arguments...>" >&2
   echo "example: $0 init" >&2

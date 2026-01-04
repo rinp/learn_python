@@ -5,7 +5,7 @@ from typing import Callable
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-import app.service.author_service as service
+import app.services.author_service as service
 from app.database import get_db
 from app.schemas.param import AuthorCreateParam
 from app.schemas.response import AuthorResponse

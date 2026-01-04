@@ -3,7 +3,7 @@ import pytest
 
 from app.models.base import Base
 from app.models import Author, Book
-from app.repository.book_crud import insert, select_all, select_by_id, delete_by_id
+from app.crud.book_crud import insert, select_all, select_by_id, delete_by_id
 from app.database import engine
 from app.schemas.param import BookCreateParam
 from uuid import uuid4

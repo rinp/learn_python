@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ENV_PROFILE = os.getenv("PROFILE", "local")
 
+
 class Settings(BaseSettings):
     """環境依存の値をもつクラス"""
 

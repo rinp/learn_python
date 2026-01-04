@@ -1,6 +1,6 @@
-# 開発向け(localとdev)は同様に利用する想定
+name: ${COMPOSE_PROJECT_NAME:-learn_python_local}
 services:
-  db:
+  local_db:
     image: postgres:15
     restart: always
     environment:
@@ -8,17 +8,17 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-  pgadmin4:
+      - postgres_local_data:/var/lib/postgresql/data
+  local_pgadmin4:
     image: dpage/pgadmin4:8.4
     ports:
-      - 8080:80
+      - 8081:80
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: password
  
 volumes:
-  postgres_data:
+  postgres_local_data:
 

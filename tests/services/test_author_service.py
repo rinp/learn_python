@@ -6,7 +6,7 @@ from uuid import uuid1
 import pytest
 
 from app.schemas.param import AuthorCreateParam
-from app.service.author_service import create_author
+from app.services.author_service import create_author
 
 
 def test_create_author_create_success(mocker):

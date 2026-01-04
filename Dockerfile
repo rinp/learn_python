@@ -1,6 +1,5 @@
 ARG PY_VERSION=3.14
 FROM python:${PY_VERSION}-rc-slim
-#COPY --from=astral/uv:${UV_VERSION}-python${PY_VERSION}-trixie-slim /uv /uvx /bin/
 COPY --from=ghcr.io/astral-sh/uv:0.9.18 /uv /uvx /bin/
 
 RUN apt-get update
