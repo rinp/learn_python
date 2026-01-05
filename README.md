@@ -57,12 +57,27 @@ uvをインストールから以下の手順に沿って処理を進めてくだ
 1. `uv venv`
 1. `source .venv/bin/activate`
 1. 手動作業 alembic.ini の　sqlalchemy.url についてlocal向けに切り替え(ファイル内にコメント記載あり)
+1. `docker compose -f docker-compose-local.yml up --build -d`
 1. `uv run alembic upgrade head`
 1. `uv sync --frozen`
-1. `docker compose -f docker-compose-local.yml up --build -d`
 1. `uv run uvicorn app.main:app --host :: --port 8001 --reload --log-level debug --access-log`
 
 [http://localhost:8001/docs](http://localhost:8001/docs)が表示できれば正常に起動できています。
+
+### フォルダ構成説明
+
+- `app/`: アプリケーション本体。
+  - `app/routers/`:FastAPIのルーター
+  - `app/schemas/`: リクエスト・レスポンス定義
+  - `app/services/`: サービス層
+  - `app/crud/`: CRUD層
+  - `app/models/`:DBモデル
+- `alembic/`: データベースマイグレーション用の設定とバージョン管理スクリプト
+- `tests/`: pytest用のユニットテスト群
+- `scripts/`: 開発／運用用スクリプト
+- `page/`: ドキュメントや OpenAPI の静的出力（`openApi/`）を配置する。
+- `htmlcov/`: テストカバレッジのHTML出力。
+
 
 ## URL構成
 

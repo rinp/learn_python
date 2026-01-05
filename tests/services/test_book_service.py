@@ -1,5 +1,7 @@
 """書籍サービスのテストモジュール"""
 
+from uuid import UUID
+
 import pytest
 
 from app.exceptions import NotFoundBookException
@@ -11,12 +13,12 @@ from app.services.book_service import (
     find_all_books,
     find_one_book,
 )
-from uuid import UUID
+
 
 def test_create_book_success(mocker):
-    book_id:UUID = UUID("3995be1f-dd34-4363-9a26-12bc8489b2f0")
+    book_id: UUID = UUID("3995be1f-dd34-4363-9a26-12bc8489b2f0")
     title = "Test Book"
-    author_id:UUID = UUID("a4efc80c-5d61-43e7-b68f-740ae9a91007")
+    author_id: UUID = UUID("a4efc80c-5d61-43e7-b68f-740ae9a91007")
     name = "author name"
 
     expect_author = BookResponse.Author(id=author_id, name=name)
@@ -145,10 +147,9 @@ def test_delete_book_success(mocker):
     mock_delete_by_id_fn = mocker.MagicMock()
     mock_delete_by_id_fn.return_value = 1
 
-    ret = delete_book(
+    delete_book(
         session=mock_session, book_id=book_id, delete_by_id_fn=mock_delete_by_id_fn
     )
-    assert ret is None
     mock_delete_by_id_fn.assert_called_once_with(mock_session, book_id)
 
     mock_session.begin.return_value.__enter__.assert_called_once()

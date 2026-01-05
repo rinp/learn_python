@@ -1,14 +1,14 @@
-"""テスト用の PyTest 設定とフィクスチャを提供するモジュール """
+"""テスト用の PyTest 設定とフィクスチャを提供するモジュール"""
 
 import pytest
 
-from app.models.base import Base
 from app.database import engine
+from app.models.base import Base
 
 
 @pytest.fixture(scope="module")
 def setup_database():
-    """ DBの初期化(全体)
+    """DBの初期化(全体)
     setup_database で テーブルを担う fixture
     """
     # 前処理：全テーブルを作成

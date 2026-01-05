@@ -1,13 +1,12 @@
-""""著者のCRUDテストモジュール"""
+"""著者のCRUDテストモジュール"""
+
 import pytest
-
 from sqlalchemy import delete
-from sqlalchemy.orm import Session
 
+from app.crud.author_crud import insert
 from app.database import get_db
 from app.models import Author
-from app.crud.author_crud import insert
-from app.database import engine
+
 
 @pytest.fixture(scope="function")
 def setup_clear_db(setup_database):
@@ -25,10 +24,11 @@ def setup_clear_db(setup_database):
     finally:
         session.rollback()
 
+
 def test_insert_success(setup_clear_db):
     session = setup_clear_db
     with session.begin():
-        ret:Author = insert(session, "Integration Test Author")
+        ret: Author = insert(session, "Integration Test Author")
 
     assert ret.name == "Integration Test Author"
 

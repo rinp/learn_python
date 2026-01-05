@@ -13,7 +13,6 @@ COPY .env.dev .env.dev
 COPY .env.local .env.local
 COPY .env.test .env.test
 
-# TODO よう確認
 ENV UV_LINK_MODE=copy 
 RUN uv sync --frozen
 

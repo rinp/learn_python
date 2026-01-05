@@ -5,14 +5,14 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.exceptions import NotFoundBookException
-from app.models import Author, Book
 from app.crud.book_crud import (
     delete_by_id,
     insert,
     select_all,
     select_by_id,
 )
+from app.exceptions import NotFoundBookException
+from app.models import Author, Book
 from app.schemas.param import BookCreateParam
 from app.schemas.response import BookResponse
 

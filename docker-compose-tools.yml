@@ -4,6 +4,7 @@ services:
     build: .
     volumes:
       - ./app:/work/app
+      - ./tests:/work/tests
       - ./alembic:/work/alembic
       - ./alembic.ini:/work/alembic.ini
       - ./pyproject.toml:/work/pyproject.toml
