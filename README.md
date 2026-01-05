@@ -24,7 +24,7 @@ dockerが利用できる環境であること。
 
 ### 開発時向けのスクリプト
 
-ruffを用いたフォーマット等実行スクリプト  
+ruffを用いたフォーマット等実行スクリプト
 ```./scripts/check.sh``` 
   
 Unit Test実行スクリプト  
@@ -33,11 +33,11 @@ Unit Test実行スクリプト
 uvを用いた処理  
 ```./scripts/uv.sh <argument>```  
 
-使用例
-./scripts/uv.sh add fastapi --extra standard
-./scripts/uv.sh run alembic init alembic
-./scripts/uv.sh run alembic revision --autogenerate -m"comment"
-./scripts/uv.sh run alembic upgrade head
+使用例  
+`./scripts/uv.sh add fastapi --extra standard`  
+`./scripts/uv.sh run alembic init alembic`  
+`./scripts/uv.sh run alembic revision --autogenerate -m"comment"`  
+`./scripts/uv.sh run alembic upgrade head`  
 
 ### その他環境構築
 
@@ -46,10 +46,10 @@ uvを用いた処理
 
 #### Pythonのインストールした上での環境構築
 上記までの開発環境構築はpythonをローカルPCにインストールしない前提となります。
-開発環境としてPythonのインストールを実施し、uv等を直接使用する場合は以下の手順でPythonが利用できる状態にしてください。
-
+uvをインストールから以下の手順に沿って処理を進めてください。  
+  
 またuvのインストールについては複数あるため、必要に応じて切り替えてください。  
-[uv公式サイト](https://docs.astral.sh/uv/getting-started/installation/)
+[uv公式サイト](https://docs.astral.sh/uv/getting-started/installation/)  
 
 1. `brew install uv`
 1. `uv python install`
