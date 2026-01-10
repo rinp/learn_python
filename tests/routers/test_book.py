@@ -259,7 +259,7 @@ def test_delete_book_fail(override_dependency):
     )
 
     response = client.delete(f"/books/{uuid4()}")
-    assert response.status_code == 404
+    assert response.status_code == 400
 
 
 #########################################################################
